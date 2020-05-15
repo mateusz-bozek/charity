@@ -1,5 +1,6 @@
-from django.contrib.auth.models import User
 from django.db import models
+
+from users.models import User
 
 
 class Category(models.Model):
@@ -20,10 +21,10 @@ class Institution(models.Model):
     # def institution_value(self):
     #     return self.get_type_display()
     #
-    # @property
-    # def categories_str(self):
-    #     return ', '.join([category.name for category in self.categories.all()])
-    #
+    @property
+    def categories_str(self):
+        return ', '.join([category.name for category in self.categories.all()])
+
     # @property
     # def categories_list(self):
     #     return [category.name for category in self.categories.all()]
@@ -39,5 +40,5 @@ class Donation(models.Model):
     zip_code = models.IntegerField()
     pick_up_date = models.DateField()
     pick_up_time = models.TimeField()
-    pick_up_comment = models.TextField()
-    user = models.ForeignKey(User, null=True, default=None, on_delete=models.SET_NULL)
+    pick_up_comment = models.TextField(null=True, blank=True, default=None)
+    user = models.ForeignKey(User, null=True, blank=True, default=None, on_delete=models.SET_NULL)

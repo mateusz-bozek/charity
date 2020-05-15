@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Ustawienia użytkownika {% endblock %}
+
+{% block extra_header %}{% endblock %}
+
+{% block headerclass %}{% endblock %}
+
+
+{% block content %}
+    <div class="slogan container container--70">
+        {% if messages %}
+            <div class="slogan container">
+                <div class="form-section form-section--columns">
+                    {% for message in messages %}
+                        <h1>{{ message }}</h1>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        <div class="slogan--item">
+            <h1> Zmień dane </h1>
+            <div class="form-section form-section--columns">
+                <div class="form-section--columns form-settings">
+                    <form method="post" action="#">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            {% for error in settings_form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        <div class="form-group form-group--inline">
+                            {{ settings_form.first_name.errors }}
+                            {{ settings_form.first_name }}
+                        </div>
+                        <div class="form-group form-group--inline">
+                            {{ settings_form.last_name.errors }}
+                            {{ settings_form.last_name }}
+                        </div>
+                        <div class="form-group form-group--inline">
+                            {{ settings_form.email.errors }}
+                            {{ settings_form.email }}
+                        </div>
+                        <div class="form-group">
+                            {{ settings_form.password.errors }}
+                            {{ settings_form.password }}
+                        </div>
+                        <div class="form-group" style="display: none">
+                            {{ settings_form.user_id }}
+                        </div>
+                        <div class="form-group form-group--buttons">
+                            <button class="btn" name='settings_btn' type="submit">Zmień ustawienia</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="slogan--item">
+            <h1> Zmień hasło</h1>
+            <form action="#" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    {% for error in password_form.non_field_errors %}
+                        {{ error }}<br>
+                    {% endfor %}
+                    {{ password_form.user_id.errors }}
+                </div>
+                <div class="form-group" style="display: none">
+                    {{ password_form.user_id }}
+                </div>
+                <div class="form-group">
+                    {{ password_form.old_password.errors }}
+                    {{ password_form.old_password }}
+                </div>
+                <div class="form-group">
+                    {{ password_form.new_password.errors }}
+                    {{ password_form.new_password }}
+                </div>
+                <div class="form-group">
+                    {{ password_form.new_password2.errors }}
+                    {{ password_form.new_password2 }}
+                </div>
+                <div class="form-group form-group--buttons">
+                    <button class="btn" name='password_btn' type="submit">Zmień hasło</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

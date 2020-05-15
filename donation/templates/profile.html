@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Profil użytkownika - {{ user.get_full_name }} {% endblock %}
+
+{% block extra_header %}{% endblock %}
+
+{% block headerclass %}{% endblock %}
+
+
+{% block content %}
+    <br>
+    <div class="slogan container container--90">
+        <div class="slogan--item">
+            <h1>Profil użytkownika</h1>
+            <div class="form-section form-section--columns">
+                <div class="form-section--columns" style="font-size: 20px">
+                    <ul style="list-style-type:none;">
+                        <li>
+                            <div class="form-group form-group--inline">
+                                <b>Imię: </b> {{ user.first_name }}
+                            </div>
+                        </li>
+                        <br>
+                        <li>
+                            <div class="form-group form-group--inline">
+                                <b>Nazwisko: </b> {{ user.last_name }}
+                            </div>
+                        </li>
+                        <br>
+                        <li>
+                            <div class="form-group form-group--inline">
+                                <b>E-mail: </b> {{ user.email }}
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

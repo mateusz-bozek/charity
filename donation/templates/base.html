@@ -12,20 +12,21 @@
 <header {% block headerclass %}class="header--main-page"{% endblock %}>
     <nav class="container container--70">
         <ul class="nav--actions">
-            {% if 1 == 1 %}
+            {% if not user.is_authenticated %}
             <li>
-                <a href="login" class="btn btn--small btn--without-border">Zaloguj</a>
+                <a href="{% url 'login' %}" class="btn btn--small btn--without-border">Zaloguj</a>
             </li>
             <li>
-                <a href="register" class="btn btn--small btn--highlighted">Załóż konto</a>
+                <a href="{% url 'register' %}" class="btn btn--small btn--highlighted">Załóż konto</a>
             </li>
             {% else %}
             <li class="logged-user">
-                Witaj Agata
+                Witaj {{ user.first_name }}
                 <ul class="dropdown">
-                    <li><a href="#">Profil</a></li>
-                    <li><a href="#">Ustawienia</a></li>
-                    <li><a href="#">Wyloguj</a></li>
+                    <li><a href="{% url 'profile' %}">Profil</a></li>
+                    <li><a href="{% url 'settings' %}">Ustawienia</a></li>
+                    {% if user.is_staff %}<li><a href="/admin">Panel administracyjny</a></li>{% endif %}
+                    <li><a href="{% url 'logout' %}">Wyloguj</a></li>
                 </ul>
             </li>
             {% endif %}
