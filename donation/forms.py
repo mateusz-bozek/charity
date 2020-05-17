@@ -4,6 +4,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 
+from donation.models import Category, Institution, Donation
 from users.models import User
 
 
@@ -80,3 +81,22 @@ class ChangePasswordForm(forms.Form):
             raise forms.ValidationError('Powtórzone hasło nie zgadza się!')
 
         validate_password(new_password)
+
+
+class DonationForm(forms.ModelForm):
+    categories = forms.ModelMultipleChoiceField(widget=forms.SelectMultiple(),
+                                                queryset=Category.objects.all().order_by('id'))
+    quantity = forms.IntegerField(widget=forms.NumberInput(attrs={"type": "number", "name": "bags",
+                                                                  "step": "1", "min": "1"}), initial=1)
+    institution = forms.ModelChoiceField(widget=forms.Select(), queryset=Institution.objects.all().order_by('name'))
+    address = forms.CharField(widget=forms.TextInput(attrs={"type": "text", "name": "address"}))
+    phone_number = forms.CharField(max_length=16, widget=forms.TextInput(attrs={"type": "phone", "name": "phone"}))
+    city = forms.CharField(max_length=32, widget=forms.TextInput(attrs={"type": "text", "name": "city"}))
+    zip_code = forms.CharField(max_length=8, widget=forms.TextInput(attrs={"type": "text", "name": "postcode"}))
+    pick_up_date = forms.DateField(widget=forms.DateInput(attrs={"type": "date", "name": "data"}))
+    pick_up_time = forms.TimeField(widget=forms.TimeInput(attrs={"type": "time", "name": "time"}))
+    pick_up_comment = forms.CharField(required=False, widget=forms.Textarea(attrs={"name": "more_info", "rows": "5"}))
+
+    class Meta:
+        model = Donation
+        exclude = ('user',)

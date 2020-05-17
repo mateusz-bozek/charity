@@ -17,17 +17,9 @@ class Institution(models.Model):
     type = models.IntegerField(choices=institution_choices, default=1)
     categories = models.ManyToManyField(Category)
 
-    # @property
-    # def institution_value(self):
-    #     return self.get_type_display()
-    #
     @property
     def categories_str(self):
         return ', '.join([category.name for category in self.categories.all()])
-
-    # @property
-    # def categories_list(self):
-    #     return [category.name for category in self.categories.all()]
 
 
 class Donation(models.Model):
@@ -42,3 +34,7 @@ class Donation(models.Model):
     pick_up_time = models.TimeField()
     pick_up_comment = models.TextField(null=True, blank=True, default=None)
     user = models.ForeignKey(User, null=True, blank=True, default=None, on_delete=models.SET_NULL)
+
+    @property
+    def categories_str(self):
+        return ', '.join([category.name for category in self.categories.all()])

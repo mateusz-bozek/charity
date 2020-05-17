@@ -1,9 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.views import View
 
-from donation.forms import LoginForm, RegisterForm, ChangePasswordForm, ChangeSettingsForm
+from donation.forms import LoginForm, RegisterForm, ChangePasswordForm, ChangeSettingsForm, DonationForm
 from donation.models import Donation, Institution
 from users.models import User
 
@@ -31,11 +32,6 @@ class LandingPageView(View):
 
     def post(self, request):
         return render(request, 'form-confirmation.html')
-
-
-class AddDonationView(View):
-    def get(self, request):
-        return render(request, 'form.html')
 
 
 class LoginView(View):
@@ -94,7 +90,8 @@ class RegisterView(View):
 class UserProfileView(View):
     def get(self, request):
         if request.user.is_authenticated:
-            return render(request, 'profile.html')
+            donations = Donation.objects.filter(user=request.user).order_by('pick_up_date', 'pick_up_time')
+            return render(request, 'profile.html', {'donations': donations})
         return redirect('login')
 
 
@@ -143,3 +140,25 @@ class UserSettingsView(View):
                     'password_form': password_form})
         else:
             redirect('settings')
+
+
+@login_required(login_url='login')
+def AddDonation(request):
+    if request.method == 'GET':
+        return render(request, 'form.html', {'form': DonationForm(), 'inst': Institution.objects.all()})
+
+    if request.method == 'POST':
+        form = DonationForm(request.POST)
+        if form.is_valid():
+            try:
+                don = form.save()
+                don.user = request.user
+                don.save()
+            except Exception as e:
+                messages.error(request, f'Błąd: {e}')
+                return render(request, 'error.html')
+            return render(request, 'form-confirmation.html')
+        else:
+            messages.error(request, f'Błąd: {form._errors}')
+            return render(request, 'error.html')
+
